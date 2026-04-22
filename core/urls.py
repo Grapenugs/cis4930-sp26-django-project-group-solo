@@ -22,5 +22,5 @@ urlpatterns = [
     path('records/<int:pk>/edit/', TrackUpdateView.as_view(), name='track_edit'),
     path('records/<int:pk>/delete/', TrackDeleteView.as_view(), name='track_delete'),
     path('analytics/', views.analytics, name='analytics'),
-
+    path('fetch/', views.fetch_data_view, name='fetch_data'),
 ]

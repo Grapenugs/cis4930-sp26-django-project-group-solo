@@ -23,6 +23,13 @@
 
 </div>
 
+<form method="post" action="{% url 'fetch_data' %}">
+    {% csrf_token %}
+    <button class="btn btn-primary mt-3">
+        Fetch GitHub Data
+    </button>
+</form>
+
 <!-- Bootstrap card (optional) -->
 <div class="card mt-5 mx-auto" style="max-width: 600px;">
     <div class="card-body">
