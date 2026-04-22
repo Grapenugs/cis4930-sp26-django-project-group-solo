@@ -1,11 +1,14 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.views.generic import CreateView, UpdateView, DeleteView
-from .models import Track
+from .models import Track, Repository
 from .forms import TrackForm
 from django.urls import reverse_lazy
 import json
 import pandas as pd
+from django.core.management import call_command
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import redirect
 
 class TrackListView(ListView):
     model = Track
@@ -77,11 +80,54 @@ def analytics(request):
 
     #Summary of stats
     summary = df.describe().to_dict()
+   
+
+    ## FOR REPOSITORY DATA NOW ###
+    # GITHUB DATA (NEW)
+ 
+    repo_qs = Repository.objects.values(
+        'language',
+        'stars'
+    )
+
+    repo_df = pd.DataFrame(list(repo_qs))
+
+    # handle empty case
+    if not repo_df.empty:
+        repo_df = repo_df.dropna()
+
+        # Avg stars by language
+        lang_avg = repo_df.groupby('language')['stars'].mean().sort_values(ascending=False).head(10)
+
+        lang_chart = {
+            'labels': lang_avg.index.tolist(),
+            'values': lang_avg.values.tolist()
+        }
+
+        # Count repos per language
+        lang_count = repo_df['language'].value_counts().head(10)
+
+        lang_count_chart = {
+            'labels': lang_count.index.tolist(),
+            'values': lang_count.values.tolist()
+        }
+    else:
+        lang_chart = {'labels': [], 'values': []}
+        lang_count_chart = {'labels': [], 'values': []}
 
     return render(request, 'core/analytics.html', {
         'genre_chart': json.dumps(genre_chart),
         'energy_chart': json.dumps(energy_chart),
         'dance_chart': json.dumps(dance_chart),
-        'summary': summary
+        'summary': summary,
+        'lang_chart': json.dumps(lang_chart),
+        'lang_count_chart': json.dumps(lang_count_chart),
     })
 
+
+#View for the repository data gathered via API
+@staff_member_required
+def fetch_data_view(request):
+    if request.method == "POST":
+        call_command('fetch_data')
+    return redirect('track_list')
