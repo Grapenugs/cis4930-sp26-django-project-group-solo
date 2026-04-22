@@ -1,0 +1,68 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Track List{% endblock %}
+
+{%block content%}
+
+<h1>Track List</h1>
+
+<table class="table table-stripped table-hover">
+    <thead>
+        <tr>
+            <th>Track</th>
+            <th>Artist</th>
+            <th>Popularity</th>
+            <th>Genre</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for track in tracks %}
+        <tr>
+            <td>
+                <a href="{% url 'track_detail' track.id %}">
+                    {{track.name}}
+                </a>
+            </td>
+            <td>{{track.artist.name}}</td>
+            <td>{{track.popularity}}</td>
+            <td>{{track.track_genre}}</td>
+            
+            <td>
+                <a href="{% url 'track_edit' track.id %}" class="btn btn-sm btn-warning">Edit</a>
+                
+                <a href="{% url 'track_delete' track.id %}" class="btn btn-sm btn-danger">Delete</a>
+            
+            </td>
+        </tr>
+        {%empty%}
+        <tr>
+            <td colspan="3">No tracks found.</td>
+        </tr>
+        {%endfor%}
+    </tbody>
+</table>
+
+<nav>
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {%endif%}
+        
+        <li class="page-item active">
+            <span class="page-link">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        {%endif%}
+    </ul>
+</nav>
+
+{%endblock%}

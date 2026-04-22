@@ -18,11 +18,11 @@ class Command(BaseCommand):
 
             for row in reader:
                 try:
-                    #row = {k.strip(): v for k, v in row.items() if k}
-                    #artist_name = (row.get('artists') or "").strip()
-                    #track_name = (row.get('track_name') or "").strip()
                     artist_name = row.get('artists')
                     track_name = row.get('track_name')
+                    
+                    genre = row.get('genre')
+                    tempo = row.get('tempo')
 
                     if not artist_name or not track_name:
                         continue
@@ -38,6 +38,8 @@ class Command(BaseCommand):
                             'danceability': float(row.get('danceability', 0)),
                             'energy': float(row.get('energy', 0)),
                             'source': 'csv',
+                            'tempo': float(row.get('tempo', 0)),
+                            'track_genre': row.get('track_genre'),
                         }
                     )
 

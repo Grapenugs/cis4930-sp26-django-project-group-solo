@@ -1,0 +1,102 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Analytics Dashboard</h1>
+
+<!-- Charts -->
+<div class="row">
+
+    <div class="col-md-6">
+        <canvas id="genreChart"></canvas>
+    </div>
+
+    <div class="col-md-6">
+        <canvas id="energyChart"></canvas>
+    </div>
+
+    <div class="col-md-6">
+        <canvas id="danceChart"></canvas>
+    </div>
+
+</div>
+
+<!-- Summary Table -->
+<h3 class="mt-5">Summary Statistics</h3>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Metric</th>
+            <th>Popularity</th>
+            <th>Energy</th>
+            <th>Danceability</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Mean</td>
+            <td>{{ summary.popularity.mean }}</td>
+            <td>{{ summary.energy.mean }}</td>
+            <td>{{ summary.danceability.mean }}</td>
+        </tr>
+        <tr>
+            <td>Max</td>
+            <td>{{ summary.popularity.max }}</td>
+            <td>{{ summary.energy.max }}</td>
+            <td>{{ summary.danceability.max }}</td>
+        </tr>
+        <tr>
+            <td>Min</td>
+            <td>{{ summary.popularity.min }}</td>
+            <td>{{ summary.energy.min }}</td>
+            <td>{{ summary.danceability.min }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const genreData = JSON.parse('{{ genre_chart|safe }}');
+    const energyData = JSON.parse('{{ energy_chart|safe }}');
+    const danceData = JSON.parse('{{ dance_chart|safe }}');
+
+    new Chart(document.getElementById('genreChart'), {
+        type: 'bar',
+        data: {
+            labels: genreData.labels,
+            datasets: [{
+                label: 'Avg Popularity by Genre',
+                data: genreData.values
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('energyChart'), {
+        type: 'pie',
+        data: {
+            labels: energyData.labels,
+            datasets: [{
+                label: 'Avg Energy',
+                data: energyData.values
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('danceChart'), {
+        type: 'bar',
+        data: {
+            labels: danceData.labels,
+            datasets: [{
+                label: 'Avg Danceability',
+                data: danceData.values
+            }]
+        }
+    });
+</script>
+
+{% endblock %}

@@ -14,6 +14,9 @@ class Track(models.Model):
     popularity = models.IntegerField(default=0)
     danceability = models.FloatField(default=0)
     energy = models.FloatField(default=0)
+    
+    tempo = models.FloatField(default=0)
+    track_genre = models.CharField(max_length=100, null=True, blank=True)
 
     SOURCE_CHOICES = [
         ('csv', 'CSV Import'),

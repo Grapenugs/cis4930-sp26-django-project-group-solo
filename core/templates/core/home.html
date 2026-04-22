@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div class="text-center">
+
+    <h1 class="mb-4">Spotify Analytics Dashboard</h1>
+
+    <p class="lead">
+        This project explores a large Spotify dataset and provides insights into track popularity,
+        audio features, and trends using Django, pandas, and Chart.js.
+    </p>
+
+    <a href="{% url 'track_list' %}" class="btn btn-primary mt-3">
+        View Tracks
+    </a>
+    
+    <a href="{% url 'track_add' %}" class="btn btn-primary mt-3">
+        Add Track
+    </a>
+
+</div>
+
+<!-- Bootstrap card (optional) -->
+<div class="card mt-5 mx-auto" style="max-width: 600px;">
+    <div class="card-body">
+        <h5 class="card-title">Project Overview</h5>
+        <p class="card-text">
+            Built using Django, Spotify dataset from Kaggle, and GitHub API integration.
+        </p>
+    </div>
+</div>
+
+{% endblock %}
